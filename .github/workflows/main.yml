@@ -7,7 +7,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest # specifier que ce job s'exécute sur un environnement virtuel 
+    runs-on: ubuntu-latest # specifier que ce job s'exécute sur un environnement virtuel
 
     steps: # sont les etapes de job
       - name: Checkout code # télécharge le code source dans l'environnement virtuel
@@ -16,7 +16,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10' # Configure un environnement Python 3.10 
+          python-version: "3.10" # Configure un environnement Python 3.10
 
       - name: Install dependencies # Met à jour pip et installe les dépendances listées
         run: |
@@ -34,7 +34,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Log in to Docker Hub # 2 step de job docker 
+      - name: Log in to Docker Hub # 2 step de job docker
         uses: docker/login-action@v2 # action officielle pour se connecter à Docker Hub.
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -42,7 +42,7 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/flask-ecommerce:${{ github.sha }} .
+          docker buildx build -t ${{ secrets.DOCKERHUB_USERNAME }}/flask-ecommerce:${{ github.sha }} .
           docker tag ${{ secrets.DOCKERHUB_USERNAME }}/flask-ecommerce:${{ github.sha }} ${{ secrets.DOCKERHUB_USERNAME }}/flask-ecommerce:latest
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/flask-ecommerce:${{ github.sha }}
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/flask-ecommerce:latest
